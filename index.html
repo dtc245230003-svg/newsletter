@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Newsletter Color Studio</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #f1f5f9; }
+        .color-input-wrapper input[type="color"] {
+            -webkit-appearance: none;
+            border: none;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            cursor: pointer;
+            padding: 0;
+            overflow: hidden;
+        }
+        .color-input-wrapper input[type="color"]::-webkit-color-swatch-wrapper {
+            padding: 0;
+        }
+        .color-input-wrapper input[type="color"]::-webkit-color-swatch {
+            border: none;
+            border-radius: 50%;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+        }
+    </style>
+</head>
+<body class="h-screen w-full flex flex-col md:flex-row overflow-hidden">
+
+    <!-- Sidebar / Control Panel -->
+    <aside class="w-full md:w-80 bg-white border-r border-slate-200 flex flex-col h-full shadow-lg z-10 flex-shrink-0 overflow-y-auto">
+        <div class="p-6 border-b border-slate-100">
+            <h1 class="text-xl font-bold text-slate-800 flex items-center gap-2">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h.01" />
+                </svg>
+                Color Studio
+            </h1>
+            <p class="text-sm text-slate-500 mt-1">Luyện tập phối màu Newsletter</p>
+        </div>
+
+        <div class="p-6 flex-grow space-y-8">
+            <!-- Presets -->
+            <div>
+                <h3 class="text-sm font-semibold text-slate-700 uppercase tracking-wider mb-3">Presets (Chủ đề)</h3>
+                <div class="space-y-2">
+                    <button onclick="applyPreset('default')" class="w-full text-left px-4 py-2.5 rounded-lg border border-slate-200 hover:border-blue-500 hover:bg-blue-50 transition-colors flex items-center justify-between group">
+                        <span class="font-medium text-slate-700 group-hover:text-blue-700">Mặc định (Bootstrap)</span>
+                        <div class="flex gap-1">
+                            <span class="w-3 h-3 rounded-full bg-[#007bff]"></span>
+                            <span class="w-3 h-3 rounded-full bg-[#6c757d]"></span>
+                            <span class="w-3 h-3 rounded-full bg-[#28a745]"></span>
+                        </div>
+                    </button>
+                    <button onclick="applyPreset('vibrant')" class="w-full text-left px-4 py-2.5 rounded-lg border border-slate-200 hover:border-orange-500 hover:bg-orange-50 transition-colors flex items-center justify-between group">
+                        <span class="font-medium text-slate-700 group-hover:text-orange-700">Version 1: Vibrant</span>
+                        <div class="flex gap-1">
+                            <span class="w-3 h-3 rounded-full bg-[#FF5722]"></span>
+                            <span class="w-3 h-3 rounded-full bg-[#673AB7]"></span>
+                            <span class="w-3 h-3 rounded-full bg-[#FFC107]"></span>
+                        </div>
+                    </button>
+                    <button onclick="applyPreset('professional')" class="w-full text-left px-4 py-2.5 rounded-lg border border-slate-200 hover:border-teal-500 hover:bg-teal-50 transition-colors flex items-center justify-between group">
+                        <span class="font-medium text-slate-700 group-hover:text-teal-700">Version 2: Professional</span>
+                        <div class="flex gap-1">
+                            <span class="w-3 h-3 rounded-full bg-[#2C3E50]"></span>
+                            <span class="w-3 h-3 rounded-full bg-[#95A5A6]"></span>
+                            <span class="w-3 h-3 rounded-full bg-[#2980B9]"></span>
+                        </div>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Color Pickers -->
+            <div>
+                <h3 class="text-sm font-semibold text-slate-700 uppercase tracking-wider mb-3">Tùy chỉnh màu sắc</h3>
+                
+                <div class="space-y-4">
+                    <!-- Primary Color -->
+                    <div class="flex items-center justify-between p-3 bg-slate-50 rounded-lg border border-slate-200">
+                        <div>
+                            <label class="block text-sm font-medium text-slate-800">Primary Color</label>
+                            <span class="text-xs text-slate-500">Màu nền Header, Nút bấm</span>
+                        </div>
+                        <div class="color-input-wrapper flex items-center gap-2">
+                            <span id="hex-primary" class="text-xs font-mono text-slate-600">#007bff</span>
+                            <input type="color" id="color-primary" value="#007bff" oninput="updateColor('primary', this.value)">
+                        </div>
+                    </div>
+
+                    <!-- Secondary Color -->
+                    <div class="flex items-center justify-between p-3 bg-slate-50 rounded-lg border border-slate-200">
+                        <div>
+                            <label class="block text-sm font-medium text-slate-800">Secondary Color</label>
+                            <span class="text-xs text-slate-500">Card 1, Footer</span>
+                        </div>
+                        <div class="color-input-wrapper flex items-center gap-2">
+                            <span id="hex-secondary" class="text-xs font-mono text-slate-600">#6c757d</span>
+                            <input type="color" id="color-secondary" value="#6c757d" oninput="updateColor('secondary', this.value)">
+                        </div>
+                    </div>
+
+                    <!-- Accent Color -->
+                    <div class="flex items-center justify-between p-3 bg-slate-50 rounded-lg border border-slate-200">
+                        <div>
+                            <label class="block text-sm font-medium text-slate-800">Accent Color</label>
+                            <span class="text-xs text-slate-500">Card 2, Điểm nhấn</span>
+                        </div>
+                        <div class="color-input-wrapper flex items-center gap-2">
+                            <span id="hex-accent" class="text-xs font-mono text-slate-600">#28a745</span>
+                            <input type="color" id="color-accent" value="#28a745" oninput="updateColor('accent', this.value)">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="p-6 border-t border-slate-100 bg-slate-50">
+            <button onclick="openExportModal()" class="w-full bg-slate-800 hover:bg-slate-900 text-white font-medium py-3 px-4 rounded-xl shadow-sm transition-all flex justify-center items-center gap-2">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                </svg>
+                Xuất Code (Nộp Bài)
+            </button>
+        </div>
+    </aside>
+
+    <!-- Main Preview Area -->
+    <main class="flex-1 bg-slate-200 flex flex-col relative h-full">
+        <div class="bg-white/80 backdrop-blur border-b border-slate-300 p-3 flex justify-between items-center absolute top-0 w-full z-10">
+            <span class="text-sm font-medium text-slate-600 flex items-center gap-2">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                </svg>
+                Live Preview (Bootstrap 5)
+            </span>
+            <div class="flex gap-2">
+                <span class="w-3 h-3 rounded-full bg-red-400"></span>
+                <span class="w-3 h-3 rounded-full bg-yellow-400"></span>
+                <span class="w-3 h-3 rounded-full bg-green-400"></span>
+            </div>
+        </div>
+        
+        <!-- We use an iframe to completely isolate Bootstrap CSS from Tailwind CSS -->
+        <iframe id="preview-frame" class="w-full h-full pt-12 bg-white" frameborder="0"></iframe>
+    </main>
+
+    <!-- Code Export Modal -->
+    <div id="export-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm hidden items-center justify-center z-50 p-4 opacity-0 transition-opacity duration-300">
+        <div class="bg-white w-full max-w-4xl rounded-2xl shadow-2xl flex flex-col max-h-[90vh] transform scale-95 transition-transform duration-300" id="export-modal-content">
+            <div class="p-5 border-b border-slate-200 flex justify-between items-center">
+                <h2 class="text-lg font-bold text-slate-800">Mã nguồn HTML/CSS (Đã phối màu)</h2>
+                <button onclick="closeExportModal()" class="text-slate-400 hover:text-slate-700 bg-slate-100 hover:bg-slate-200 rounded-full p-2 transition-colors">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
+            </div>
+            
+            <div class="p-1 flex-1 overflow-hidden bg-[#1e1e1e]">
+                <textarea id="code-output" readonly class="w-full h-full bg-[#1e1e1e] text-green-400 font-mono text-sm p-4 outline-none resize-none" spellcheck="false"></textarea>
+            </div>
+            
+            <div class="p-4 border-t border-slate-200 bg-slate-50 flex justify-between items-center rounded-b-2xl">
+                <p class="text-sm text-slate-500">Copy toàn bộ đoạn mã này vào file <code class="bg-white px-1 py-0.5 rounded border text-slate-700">index.html</code> của bạn.</p>
+                <button onclick="copyCode()" id="copy-btn" class="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2.5 px-6 rounded-lg shadow-sm transition-all flex items-center gap-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3" />
+                    </svg>
+                    Sao chép Code
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Current Colors State
+        let currentColors = {
+            primary: '#007bff',
+            secondary: '#6c757d',
+            accent: '#28a745',
+            darkerPrimary: '#0056b3'
+        };
+
+        // Presets Definition
+        const presets = {
+            default: { primary: '#007bff', secondary: '#6c757d', accent: '#28a745' },
+            vibrant: { primary: '#FF5722', secondary: '#673AB7', accent: '#FFC107' },
+            professional: { primary: '#2C3E50', secondary: '#95A5A6', accent: '#2980B9' }
+        };
+
+        // Utility: Darken a hex color (for button hover states)
+        function darkenHexColor(hex, percent) {
+            hex = hex.replace(/^\s*#|\s*$/g, '');
+            if(hex.length == 3){ hex = hex.replace(/(.)/g, '$1$1'); }
+            let r = parseInt(hex.substr(0, 2), 16),
+                g = parseInt(hex.substr(2, 2), 16),
+                b = parseInt(hex.substr(4, 2), 16);
+            
+            r = Math.max(0, Math.floor(r * (1 - percent)));
+            g = Math.max(0, Math.floor(g * (1 - percent)));
+            b = Math.max(0, Math.floor(b * (1 - percent)));
+            
+            return '#' + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1).toUpperCase();
+        }
+
+        // --- Template Generator ---
+        // Generates the raw HTML string for the newsletter with current colors injected
+        function generateNewsletterHTML(colors) {
+            return `<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Newsletter - Thực hành phối màu</title>
+    <!-- Liên kết Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        /* CSS Tùy chỉnh với bộ màu từ Color Studio */
+        :root {
+            --primary-color: ${colors.primary};
+            --secondary-color: ${colors.secondary};
+            --accent-color: ${colors.accent};
+            --darker-primary-color: ${colors.darkerPrimary};
+        }
+        
+        .primary-bg { background-color: var(--primary-color) !important; }
+        .secondary-bg { background-color: var(--secondary-color) !important; }
+        .accent-bg { background-color: var(--accent-color) !important; }
+        
+        .text-primary-color { color: var(--primary-color) !important; }
+        .text-secondary-color { color: var(--secondary-color) !important; }
+        .text-accent-color { color: var(--accent-color) !important; }
+        
+        .btn-primary-custom {
+            background-color: var(--primary-color) !important;
+            color: white !important;
+            border-color: var(--primary-color) !important;
+        }
+        .btn-primary-custom:hover {
+            background-color: var(--darker-primary-color) !important;
+            border-color: var(--darker-primary-color) !important;
+        }
+        
+        body { background-color: #f8f9fa; }
+        .card { border: none; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
+    </style>
+</head>
+<body>
+    <div class="container py-5 max-w-[800px]">
+        <!-- Header -->
+        <header class="text-center mb-5 p-5 primary-bg text-white rounded shadow-sm">
+            <h1 class="fw-bold mb-2">Bản Tin Trello</h1>
+            <p class="mb-0 opacity-75">Nơi bắt đầu những câu chuyện mới và năng suất làm việc</p>
+        </header>
+
+        <!-- Main Introduction -->
+        <section class="card mb-4">
+            <div class="card-body p-5 text-center">
+                <h2 class="card-title text-primary-color fw-bold mb-3">Khám phá cách làm việc mới!</h2>
+                <p class="card-text text-muted mb-4">
+                    Trello giúp nhóm của bạn tiến tới công việc thành công, dù bạn đang ở đâu. 
+                    Màu sắc bạn chọn sẽ ảnh hưởng đến tâm trạng và năng suất của cả team.
+                </p>
+                <a href="#" class="btn btn-primary-custom px-4 py-2 fw-medium">Bắt đầu ngay hôm nay</a>
+            </div>
+        </section>
+
+        <!-- Features Split -->
+        <section class="row mb-4">
+            <div class="col-md-6 mb-3 mb-md-0">
+                <div class="card h-100 secondary-bg text-white">
+                    <div class="card-body p-4">
+                        <h3 class="card-title h4 fw-bold">Tính năng nổi bật 1</h3>
+                        <p class="card-text opacity-75">Tổ chức công việc khoa học với các bảng, danh sách và thẻ. Màu nền này tạo sự tập trung.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card h-100 accent-bg text-white">
+                    <div class="card-body p-4">
+                        <h3 class="card-title h4 fw-bold">Tự động hóa thông minh</h3>
+                        <p class="card-text opacity-75">Sử dụng Butler để tự động hóa các nhiệm vụ lặp đi lặp lại. Màu nhấn giúp thu hút sự chú ý.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="text-center mt-5 p-4 secondary-bg text-white rounded">
+            <p class="mb-0 opacity-75">&copy; 2024 Bài tập phối màu Newsletter. Mọi quyền được bảo lưu.</p>
+        </footer>
+    </div>
+</body>
+</html>`;
+        }
+
+        // Update the Iframe Preview
+        function renderPreview() {
+            const iframe = document.getElementById('preview-frame');
+            const htmlContent = generateNewsletterHTML(currentColors);
+            
+            iframe.srcdoc = htmlContent;
+        }
+
+        // Update single color from input
+        function updateColor(type, value) {
+            currentColors[type] = value;
+            document.getElementById(`hex-${type}`).innerText = value.toUpperCase();
+            
+            // Auto-calculate darker primary for hover states
+            if (type === 'primary') {
+                currentColors.darkerPrimary = darkenHexColor(value, 0.2); // 20% darker
+            }
+
+            // Instead of reloading the whole iframe (which flickers), inject CSS variable changes directly
+            const iframeDoc = document.getElementById('preview-frame').contentWindow.document;
+            if (iframeDoc && iframeDoc.documentElement) {
+                iframeDoc.documentElement.style.setProperty(`--${type}-color`, value);
+                if (type === 'primary') {
+                    iframeDoc.documentElement.style.setProperty(`--darker-primary-color`, currentColors.darkerPrimary);
+                }
+            } else {
+                renderPreview(); // Fallback if direct injection fails
+            }
+        }
+
+        // Apply a predefined preset
+        function applyPreset(presetName) {
+            const preset = presets[presetName];
+            
+            // Update Inputs and State
+            document.getElementById('color-primary').value = preset.primary;
+            document.getElementById('color-secondary').value = preset.secondary;
+            document.getElementById('color-accent').value = preset.accent;
+            
+            updateColor('primary', preset.primary);
+            updateColor('secondary', preset.secondary);
+            updateColor('accent', preset.accent);
+            
+            // Re-render completely to ensure clean state
+            renderPreview();
+        }
+
+        // --- Modal & Export Logic ---
+        const modal = document.getElementById('export-modal');
+        const modalContent = document.getElementById('export-modal-content');
+        
+        function openExportModal() {
+            const codeOutput = document.getElementById('code-output');
+            codeOutput.value = generateNewsletterHTML(currentColors);
+            
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+            // Small delay for transition
+            setTimeout(() => {
+                modal.classList.remove('opacity-0');
+                modalContent.classList.remove('scale-95');
+            }, 10);
+        }
+
+        function closeExportModal() {
+            modal.classList.add('opacity-0');
+            modalContent.classList.add('scale-95');
+            
+            setTimeout(() => {
+                modal.classList.add('hidden');
+                modal.classList.remove('flex');
+                document.getElementById('copy-btn').innerHTML = `
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3" />
+                    </svg> Sao chép Code`;
+            }, 300);
+        }
+
+        function copyCode() {
+            const codeText = document.getElementById('code-output');
+            codeText.select();
+            codeText.setSelectionRange(0, 99999); /* For mobile devices */
+            
+            try {
+                document.execCommand('copy');
+                const btn = document.getElementById('copy-btn');
+                btn.innerHTML = `
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                    </svg> Đã Sao Chép!`;
+                btn.classList.add('bg-green-600', 'hover:bg-green-700');
+                btn.classList.remove('bg-blue-600', 'hover:bg-blue-700');
+                
+                setTimeout(() => {
+                    btn.classList.remove('bg-green-600', 'hover:bg-green-700');
+                    btn.classList.add('bg-blue-600', 'hover:bg-blue-700');
+                    btn.innerHTML = `
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3" />
+                        </svg> Sao chép Code`;
+                }, 2000);
+            } catch (err) {
+                alert("Không thể tự động sao chép. Vui lòng bấm Ctrl+C hoặc Cmd+C.");
+            }
+        }
+
+        // Initialize on load
+        window.onload = function() {
+            renderPreview();
+        };
+    </script>
+</body>
+</html>
